@@ -3,7 +3,11 @@
   "description": "Element used to select a time of day",
   "main": "oc-time-picker.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.4.0"
+    "polymer": "Polymer/polymer#^1.4.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.11",
+    "paper-time-picker": "^1.1.2",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.0.4",
+    "paper-button": "PolymerElements/paper-button#^1.0.12"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

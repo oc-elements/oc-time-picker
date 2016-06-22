@@ -1,5 +1,11 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-time-picker/paper-time-picker.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-input/iron-input.html">
 
+<!--@demo-->
 <dom-module id="oc-time-picker">
   <template>
     <style>
@@ -7,7 +13,20 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+
+    <paper-input-container>
+      <label>[[ label ]]</label>
+      <input id="txtTime" is="iron-input" readonly bind-value="{{ time }}">
+      <paper-icon-button suffix icon="create" on-tap="_openClockDialog"></paper-icon-button>
+    </paper-input-container>
+
+    <paper-dialog id="dialog" modal class="paper-time-picker-dialog" on-iron-overlay-closed="_dismissDialog">
+      <paper-time-picker id="timePicker" time="[[time]]"></paper-time-picker>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm>OK</paper-button>
+      </div>
+    </paper-dialog>
   </template>
 
   <script>
@@ -16,12 +35,26 @@
       is: 'oc-time-picker',
 
       properties: {
-        prop1: {
+        label: {
           type: String,
-          value: 'oc-time-picker',
+          value: ""
         },
+        time: {
+          type: String,
+          value: ""
+        }
       },
 
+      _openClockDialog: function() {
+        this.$.timePicker.time = this.time;
+        this.$.dialog.toggle();
+      },
+
+      _dismissDialog: function(event) {
+        if (event.detail.confirmed) {
+          this.time = this.$.timePicker.hour + ":" + this.$.timePicker.minute;
+        }
+      }
     });
   </script>
 </dom-module>
