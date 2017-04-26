@@ -17,10 +17,10 @@
     <paper-input-container>
       <label>[[ label ]]</label>
       <input id="txtTime" is="iron-input" readonly bind-value="{{ time }}">
-      <paper-icon-button suffix icon="create" on-tap="_openClockDialog"></paper-icon-button>
+      <paper-icon-button suffix icon="create" on-tap="_openClockDialog" ></paper-icon-button>
     </paper-input-container>
 
-    <paper-dialog id="dialog" modal class="paper-time-picker-dialog" on-iron-overlay-closed="_dismissDialog">
+    <paper-dialog id="dialog" modal class="paper-time-picker-dialog" on-iron-overlay-opened="_patchOverlay"  on-iron-overlay-closed="_dismissDialog">
       <paper-time-picker id="timePicker" time="[[time]]"></paper-time-picker>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -41,9 +41,24 @@
         },
         time: {
           type: String,
-          value: ""
+          value: "",
         }
       },
+
+      // https://github.com/PolymerElements/paper-dialog/issues/7
+      _patchOverlay: function (e) {
+        if (e.target.withBackdrop) {
+          e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+        }
+      },
+
+      _zeroPad: function(value, length) {
+        if (value === undefined || isNaN(value) || isNaN(length)) {
+          return;
+        }
+        return ('0' + value).substr(-length);
+      },
+
 
       _openClockDialog: function() {
         this.$.timePicker.time = this.time;
@@ -52,7 +67,7 @@
 
       _dismissDialog: function(event) {
         if (event.detail.confirmed) {
-          this.time = this.$.timePicker.hour + ":" + this.$.timePicker.minute;
+          this.time = this._zeroPad(this.$.timePicker.hour,2) + ":" + this._zeroPad(this.$.timePicker.minute,2);
         }
       }
     });
